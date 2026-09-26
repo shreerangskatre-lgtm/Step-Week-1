@@ -1,0 +1,40 @@
+import java.util.Scanner;
+
+public class Main {
+	public static void classifyWordLengths(String review) {
+		int shortCount = 0;
+		int mediumCount = 0;
+		int longCount = 0;
+
+		for (String word : review.trim().split("\\s+")) {
+			String lettersOnly = word.replaceAll("[^A-Za-z]", "");
+			int length = lettersOnly.length();
+
+			if (length >= 1 && length <= 4) {
+				shortCount++;
+			} else if (length <= 8) {
+				mediumCount++;
+			} else if (length >= 9) {
+				longCount++;
+			}
+		}
+
+		System.out.println("Short: " + shortCount + " | Medium: " + mediumCount
+				+ " | Long: " + longCount);
+	}
+
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		StringBuilder review = new StringBuilder();
+
+		while (scanner.hasNextLine()) {
+			if (review.length() > 0) {
+				review.append(' ');
+			}
+			review.append(scanner.nextLine());
+		}
+
+		classifyWordLengths(review.toString());
+		scanner.close();
+	}
+}
