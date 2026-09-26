@@ -1,0 +1,35 @@
+public class Q1W1HWP {
+	public static void checkDuplicateSeats(int[] seatNumbers) {
+		StringBuilder duplicates = new StringBuilder();
+
+		for (int i = 0; i < seatNumbers.length; i++) {
+			boolean appearedEarlier = false;
+			for (int j = 0; j < i; j++) {
+				if (seatNumbers[i] == seatNumbers[j]) {
+					appearedEarlier = true;
+					break;
+				}
+			}
+
+			if (appearedEarlier) {
+				continue;
+			}
+
+			for (int j = i + 1; j < seatNumbers.length; j++) {
+				if (seatNumbers[i] == seatNumbers[j]) {
+					if (duplicates.length() > 0) {
+						duplicates.append(", ");
+					}
+					duplicates.append(seatNumbers[i]);
+					break;
+				}
+			}
+		}
+
+		if (duplicates.length() == 0) {
+			System.out.println("No Duplicate Seats Found");
+		} else {
+			System.out.println("Duplicate Seat Number Found: " + duplicates);
+		}
+	}
+}

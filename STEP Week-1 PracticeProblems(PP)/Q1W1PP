@@ -1,0 +1,85 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.Scanner;
+
+public class Q1W1PP {
+	private static final String[] MOVES = {"Rock", "Paper", "Scissors"};
+
+	private static class Round {
+		final String playerMove;
+		final String computerMove;
+		final String result;
+
+		Round(String playerMove, String computerMove, String result) {
+			this.playerMove = playerMove;
+			this.computerMove = computerMove;
+			this.result = result;
+		}
+	}
+
+	public static String playRound(String playerMove, String computerMove) {
+		String player = normalizeMove(playerMove);
+		String computer = normalizeMove(computerMove);
+		if (player.equals(computer)) return "Draw";
+
+		boolean playerWins = (player.equals("Rock") && computer.equals("Scissors"))
+				|| (player.equals("Paper") && computer.equals("Rock"))
+				|| (player.equals("Scissors") && computer.equals("Paper"));
+		return playerWins ? "Player Wins" : "Computer Wins";
+	}
+
+	private static String normalizeMove(String move) {
+		if (move == null) throw new IllegalArgumentException("Move must be Rock, Paper, or Scissors.");
+		for (String validMove : MOVES) {
+			if (validMove.equalsIgnoreCase(move.trim())) return validMove;
+		}
+		throw new IllegalArgumentException("Move must be Rock, Paper, or Scissors.");
+	}
+
+	public static void main(String[] args) {
+		final int roundsToPlay = 5;
+		Random random = new Random();
+		List<Round> rounds = new ArrayList<>();
+		int wins = 0, losses = 0, draws = 0;
+
+		try (Scanner scanner = new Scanner(System.in)) {
+			for (int i = 1; i <= roundsToPlay; i++) {
+				String playerMove;
+				while (true) {
+					System.out.printf("Round %d - Enter Rock, Paper, or Scissors: ", i);
+					String input = scanner.nextLine();
+					try {
+						playerMove = normalizeMove(input);
+						break;
+					} catch (IllegalArgumentException e) {
+						System.out.println("Invalid move. Please try again.");
+					}
+				}
+
+				String computerMove = MOVES[random.nextInt(MOVES.length)];
+				String result = playRound(playerMove, computerMove);
+				rounds.add(new Round(playerMove, computerMove, result));
+				System.out.printf("Player: %s, Computer: %s - %s%n", playerMove, computerMove, result);
+
+				if (result.equals("Player Wins")) wins++;
+				else if (result.equals("Computer Wins")) losses++;
+				else draws++;
+			}
+		}
+
+		System.out.println("\nFinal Summary");
+		System.out.printf("%-7s | %-12s | %-14s | %s%n", "Round", "Player Move", "Computer Move", "Result");
+		System.out.println("--------|--------------|----------------|----------------");
+		for (int i = 0; i < rounds.size(); i++) {
+			Round round = rounds.get(i);
+			System.out.printf(Locale.ROOT, "%-7d | %-12s | %-14s | %s%n",
+					i + 1, round.playerMove, round.computerMove, round.result);
+		}
+
+		double winPercentage = wins * 100.0 / roundsToPlay;
+		System.out.printf(Locale.ROOT, "Wins: %d | Losses: %d | Draws: %d | Win %% = %.1f%%%n",
+				wins, losses, draws, winPercentage);
+	}
+}

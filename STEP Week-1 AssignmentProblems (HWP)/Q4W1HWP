@@ -1,0 +1,54 @@
+import java.util.Scanner;
+
+public class Q4W1HWP {
+	public static void analyzeInventory(int[] sectionA, int[] sectionB) {
+		if (sectionA == null || sectionB == null || sectionA.length != sectionB.length
+				|| sectionA.length == 0) {
+			throw new IllegalArgumentException("Sections must be non-empty arrays of equal length.");
+		}
+
+		long totalA = 0;
+		long totalB = 0;
+		int highest = sectionA[0];
+		String highestSection = "Section A";
+		int highestIndex = 0;
+
+		for (int i = 0; i < sectionA.length; i++) {
+			totalA += sectionA[i];
+			totalB += sectionB[i];
+
+			if (sectionA[i] > highest) {
+				highest = sectionA[i];
+				highestSection = "Section A";
+				highestIndex = i;
+			}
+			if (sectionB[i] > highest) {
+				highest = sectionB[i];
+				highestSection = "Section B";
+				highestIndex = i;
+			}
+		}
+
+		String status = totalA == totalB ? "Balanced" : "Not Balanced";
+		System.out.printf("Section A Total: %d | Section B Total: %d | Status: %s | Highest Quantity: %d (%s, Item %d)%n",
+				totalA, totalB, status, highest, highestSection, highestIndex + 1);
+	}
+
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		int[] sectionA = readArray(scanner, "Section A");
+		int[] sectionB = readArray(scanner, "Section B");
+		analyzeInventory(sectionA, sectionB);
+		scanner.close();
+	}
+
+	private static int[] readArray(Scanner scanner, String sectionName) {
+		System.out.print("Enter " + sectionName + " quantities (space-separated): ");
+		String[] values = scanner.nextLine().trim().split("\\s+");
+		int[] quantities = new int[values.length];
+		for (int i = 0; i < values.length; i++) {
+			quantities[i] = Integer.parseInt(values[i]);
+		}
+		return quantities;
+	}
+}
